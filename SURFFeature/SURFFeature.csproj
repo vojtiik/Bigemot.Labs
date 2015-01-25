@@ -63,7 +63,13 @@
   </Target>
   -->
   <ItemGroup>
-    <Compile Include="DrawMatches.cs" />
+    <Compile Include="CameraCapture.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CameraCapture.Designer.cs">
+      <DependentUpon>CameraCapture.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ImageMatcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SURFFeature.cs" />
   </ItemGroup>
@@ -101,6 +107,12 @@
     <Content Include="box_in_scene.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="vanoce.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="wrong.JPG">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
@@ -124,6 +136,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="CameraCapture.resx" />
   </ItemGroup>
   <PropertyGroup>
     <PreBuildEvent>xcopy /E /Y "$(SolutionDir)Emgu\interop" "$(SolutionDir)SURFFeature\bin\Debug"
