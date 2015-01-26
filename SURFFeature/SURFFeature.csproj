@@ -71,7 +71,7 @@
     </Compile>
     <Compile Include="ImageMatcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SURFFeature.cs" />
+    <Compile Include="Program.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Emgu.CV, Version=3.0.0.2032, Culture=neutral, PublicKeyToken=7281126722ab4438, processorArchitecture=MSIL">
@@ -93,6 +93,9 @@
     <Reference Include="Emgu.Util, Version=3.0.0.2032, Culture=neutral, PublicKeyToken=7281126722ab4438, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Emgu\Emgu.Util.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -136,6 +139,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="CameraCapture.resx" />
