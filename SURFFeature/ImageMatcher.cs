@@ -21,6 +21,8 @@ namespace SURFFeature
         private readonly int _k;
         private SURFDetector _surfCpu;
 
+        private int ProcessedImages = 0;
+
         public ImageMatcher(double hessianThresh, double uniquenessThreshold, int k)
         {
             _hessianThresh = hessianThresh;
@@ -41,13 +43,15 @@ namespace SURFFeature
             {
                 ModelKeyPoints = new VectorOfKeyPoint();
                 _modelDescriptors = new UMat();
-                _surfCpu = new SURFDetector(_hessianThresh);
+                _surfCpu = new SURFDetector(_hessianThresh); //,10,8);
                 _surfCpu.DetectAndCompute(uModelImage, null, ModelKeyPoints, _modelDescriptors, false);
             }
         }
 
         public HomographyMatrix DetermineHomography(Image<Bgr, byte> observedImage)
         {
+            ProcessedImages++;
+
             ObservedKeyPoints = new VectorOfKeyPoint();
             Matches = new VectorOfVectorOfDMatch();
 
@@ -72,36 +76,36 @@ namespace SURFFeature
                 stopWatch3.Start();
                 
                 matcher.KnnMatch(observedDescriptors, Matches, _k, null);
-
-                StopWatchAndLogElapsed(stopWatch3, "KnnMatch");
                 
+                StopWatchAndLogElapsed(stopWatch3, "KnnMatch");
+             
                 Mask = new Matrix<byte>(Matches.Size, 1);
                 Mask.SetValue(255);
                 Features2DToolbox.VoteForUniqueness(Matches, _uniquenessThreshold, Mask);
 
                 var nonZeroCount = CvInvoke.CountNonZero(Mask);
-                if (nonZeroCount < 25)
+                if (nonZeroCount < 4)
                 {
-                    StopWatchAndLogElapsed(stopWatch, "DetermineHomography - no match");
+                    StopWatchAndLogElapsed(stopWatch, "DetermineHomography - fail no match");
                     return null;
                 }
-
+                
                 nonZeroCount = Features2DToolbox.VoteForSizeAndOrientation(ModelKeyPoints, ObservedKeyPoints, Matches, Mask, 1.5, 20);
-                if (nonZeroCount >= 25)
+                if (nonZeroCount >= 4)
                 {
-                    StopWatchAndLogElapsed(stopWatch, "DetermineHomography");
+                    StopWatchAndLogElapsed(stopWatch, "DetermineHomography - success");
                     return Features2DToolbox.GetHomographyMatrixFromMatchedFeatures(ModelKeyPoints, ObservedKeyPoints, Matches, Mask, 2);
                 }
             }
 
-            StopWatchAndLogElapsed(stopWatch, "DetermineHomography - no match");
+            StopWatchAndLogElapsed(stopWatch, "DetermineHomography - fail no match");
             return null;
         }
 
         private void StopWatchAndLogElapsed(Stopwatch stopWatch,string stopWatchName )
         {
             stopWatch.Stop();
-            LogManager.GetLogger("default").InfoFormat("{0} elapsed in: {1} ", stopWatchName, stopWatch.ElapsedMilliseconds);
+            LogManager.GetLogger("default").InfoFormat("Image {2} : {0} elapsed in: {1} ", stopWatchName, stopWatch.ElapsedMilliseconds, ProcessedImages);
         }
     }
 }

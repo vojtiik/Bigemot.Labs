@@ -18,7 +18,7 @@ namespace SURFFeature
         private Capture _capture = null;
         private bool _captureInProgress;
         public Image<Bgr, byte> ModelImage = new Image<Bgr, byte>("vanoce.jpg");
-        private ImageMatcher matcher = new ImageMatcher(500, 0.6, 2);
+        private ImageMatcher matcher = new ImageMatcher(300, 0.8, 2);
 
         public CameraCapture()
         {
